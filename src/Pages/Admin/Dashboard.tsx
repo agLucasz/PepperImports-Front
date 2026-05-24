@@ -222,46 +222,101 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
 
-          {/* ══ LINHA 2: Gráfico + Alertas ══ */}
-          <div className="dash-row">
-            {/* Produto mais vendido + lista */}
-            <div className="card">
-              <div className="card-head">
-                <div>
-                  <p className="eyebrow">Ranking</p>
-                  <h3>Produtos mais vendidos</h3>
+          {/* ══ GRID PRINCIPAL: 2 colunas flex independentes ══ */}
+          <div className="dash-main-grid">
+
+            {/* ════ COLUNA ESQUERDA — Produtos + Últimas vendas ════ */}
+            <div className="dash-left-col">
+
+              {/* Produtos mais vendidos */}
+              <div className="card">
+                <div className="card-head">
+                  <div>
+                    <p className="eyebrow">Ranking</p>
+                    <h3>Produtos mais vendidos</h3>
+                  </div>
+                  <button className="btn-ghost btn-sm" onClick={() => navigate('/pdv')}>
+                    Ver vendas
+                    <ArrowRight size={14} strokeWidth={2} />
+                  </button>
                 </div>
-                <button className="btn-ghost btn-sm" onClick={() => navigate('/pdv')}>
-                  Ver vendas
-                  <ArrowRight size={14} strokeWidth={2} />
-                </button>
+                {loading && <p className="dash-empty">Carregando…</p>}
+                {!loading && topProdutos.length === 0 && (
+                  <p className="dash-empty">Nenhuma venda registrada</p>
+                )}
+                {!loading && topProdutos.map((p, idx) => (
+                  <div key={p.nome} className="list-row">
+                    <span className="list-rank">#{idx + 1}</span>
+                    <div className="list-thumb">
+                      <Package size={22} strokeWidth={1.4} color="var(--fg-soft)" />
+                    </div>
+                    <div className="list-info">
+                      <b>{p.nome}</b>
+                      <small>{p.qtd} unidades vendidas</small>
+                    </div>
+                    <div className="list-meta">
+                      {fmtBRL(p.receita)}
+                      <small>receita</small>
+                    </div>
+                  </div>
+                ))}
               </div>
 
-              {loading && <p className="dash-empty">Carregando…</p>}
-              {!loading && topProdutos.length === 0 && (
-                <p className="dash-empty">Nenhuma venda registrada</p>
-              )}
-              {!loading && topProdutos.map((p, idx) => (
-                <div key={p.nome} className="list-row">
-                  <span className="list-rank">#{idx + 1}</span>
-                  <div className="list-thumb">
-                    <Package size={22} strokeWidth={1.4} color="var(--fg-soft)" />
+              {/* Últimas vendas */}
+              <div className="card">
+                <div className="card-head">
+                  <div>
+                    <p className="eyebrow">Atividade recente</p>
+                    <h3>Últimas vendas</h3>
                   </div>
-                  <div className="list-info">
-                    <b>{p.nome}</b>
-                    <small>{p.qtd} unidades vendidas</small>
-                  </div>
-                  <div className="list-meta">
-                    {fmtBRL(p.receita)}
-                    <small>receita</small>
-                  </div>
+                  <button className="btn-ghost btn-sm" onClick={() => navigate('/pdv')}>
+                    Ver todas
+                    <ArrowRight size={14} strokeWidth={2} />
+                  </button>
                 </div>
-              ))}
-            </div>
+                {loading && <p className="dash-empty">Carregando…</p>}
+                {!loading && ultimasVendas.length === 0 && (
+                  <p className="dash-empty">Nenhuma venda registrada</p>
+                )}
+                {!loading && ultimasVendas.length > 0 && (
+                  <table className="dash-mini-table">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Produtos</th>
+                        <th>Total</th>
+                        <th>Data</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {ultimasVendas.map(v => (
+                        <tr key={v.vendaId}>
+                          <td className="mono">#{v.vendaId}</td>
+                          <td>
+                            <div className="dash-chips">
+                              {v.itens.slice(0, 2).map(i => (
+                                <span key={i.vendaItemId} className="picker-chip">
+                                  {i.nomeProduto} ×{i.quantidadeItem}
+                                </span>
+                              ))}
+                              {v.itens.length > 2 && <span className="picker-chip">+{v.itens.length - 2}</span>}
+                            </div>
+                          </td>
+                          <td className="dash-mini-total">{fmtBRL(v.valorVenda)}</td>
+                          <td className="dash-mini-date">{v.dataVenda ? fmtDate(v.dataVenda) : '—'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </div>
 
-            {/* Alertas de contas */}
-            <div className="dash-alerts-col">
-              {/* Vencidas */}
+            </div>{/* /dash-left-col */}
+
+            {/* ════ COLUNA DIREITA — Alertas + Relatórios ════ */}
+            <div className="dash-right-col">
+
+              {/* Contas vencidas */}
               <div className={`card dash-alert-card${contasVencidas.length > 0 ? ' dash-alert-card--danger' : ''}`}>
                 <div className="card-head">
                   <div>
@@ -340,80 +395,25 @@ const Dashboard: React.FC = () => {
                   </button>
                 )}
               </div>
-            </div>
-          </div>
 
-          {/* ══ LINHA 3: Últimas Vendas + Cards de relatório ══ */}
-          <div className="dash-row-3">
-            {/* Últimas vendas */}
-            <div className="card" style={{ gridColumn: 'span 2' }}>
-              <div className="card-head">
-                <div>
-                  <p className="eyebrow">Atividade recente</p>
-                  <h3>Últimas vendas</h3>
-                </div>
-                <button className="btn-ghost btn-sm" onClick={() => navigate('/pdv')}>
-                  Ver todas
-                  <ArrowRight size={14} strokeWidth={2} />
-                </button>
-              </div>
+            </div>{/* /dash-right-col */}
 
-              {loading && <p className="dash-empty">Carregando…</p>}
-              {!loading && ultimasVendas.length === 0 && (
-                <p className="dash-empty">Nenhuma venda registrada</p>
-              )}
-              {!loading && ultimasVendas.length > 0 && (
-                <table className="dash-mini-table">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Produtos</th>
-                      <th>Total</th>
-                      <th>Data</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {ultimasVendas.map(v => (
-                      <tr key={v.vendaId}>
-                        <td className="mono">#{v.vendaId}</td>
-                        <td>
-                          <div className="dash-chips">
-                            {v.itens.slice(0, 2).map(i => (
-                              <span key={i.vendaItemId} className="picker-chip">
-                                {i.nomeProduto} ×{i.quantidadeItem}
-                              </span>
-                            ))}
-                            {v.itens.length > 2 && <span className="picker-chip">+{v.itens.length - 2}</span>}
-                          </div>
-                        </td>
-                        <td className="dash-mini-total">{fmtBRL(v.valorVenda)}</td>
-                        <td className="dash-mini-date">{v.dataVenda ? fmtDate(v.dataVenda) : '—'}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
+          </div>{/* /dash-main-grid */}
 
-            {/* Cards de relatório */}
-            <div className="dash-reports-col">
-              <p className="dash-reports-label">Baixar relatórios</p>
-
+          {/* ══ RELATÓRIOS — faixa horizontal completa ══ */}
+          <div className="dash-reports-row">
+            <p className="dash-reports-label">Baixar relatórios</p>
+            <div className="dash-reports-grid">
               <button className="dash-report-card" onClick={baixarVendasMes} disabled={loading}>
-                <div className="dash-report-icon">
-                  <ShoppingCart size={18} strokeWidth={1.8} />
-                </div>
+                <div className="dash-report-icon"><ShoppingCart size={18} strokeWidth={1.8} /></div>
                 <div className="dash-report-info">
                   <b>Vendas do mês</b>
                   <small>{vendasMes.length} venda{vendasMes.length !== 1 ? 's' : ''} · {fmtBRL(faturamentoMes)}</small>
                 </div>
                 <Download size={15} strokeWidth={2} className="dash-report-dl" />
               </button>
-
               <button className="dash-report-card" onClick={baixarContasMes} disabled={loading}>
-                <div className="dash-report-icon">
-                  <Wallet size={18} strokeWidth={1.8} />
-                </div>
+                <div className="dash-report-icon"><Wallet size={18} strokeWidth={1.8} /></div>
                 <div className="dash-report-info">
                   <b>Contas do mês</b>
                   <small>
@@ -422,33 +422,19 @@ const Dashboard: React.FC = () => {
                 </div>
                 <Download size={15} strokeWidth={2} className="dash-report-dl" />
               </button>
-
               <button className="dash-report-card dash-report-card--danger" onClick={baixarVencidas} disabled={loading || contasVencidas.length === 0}>
-                <div className="dash-report-icon dash-report-icon--danger">
-                  <AlertTriangle size={18} strokeWidth={1.8} />
-                </div>
+                <div className="dash-report-icon dash-report-icon--danger"><AlertTriangle size={18} strokeWidth={1.8} /></div>
                 <div className="dash-report-info">
                   <b>Contas vencidas</b>
-                  <small>
-                    {contasVencidas.length > 0
-                      ? `${contasVencidas.length} pendente${contasVencidas.length !== 1 ? 's' : ''}`
-                      : 'Nenhuma pendência'}
-                  </small>
+                  <small>{contasVencidas.length > 0 ? `${contasVencidas.length} pendente${contasVencidas.length !== 1 ? 's' : ''}` : 'Nenhuma pendência'}</small>
                 </div>
                 <Download size={15} strokeWidth={2} className="dash-report-dl" />
               </button>
-
               <button className="dash-report-card dash-report-card--amber" onClick={baixarAVencer} disabled={loading || contasAVencer.length === 0}>
-                <div className="dash-report-icon dash-report-icon--amber">
-                  <Clock size={18} strokeWidth={1.8} />
-                </div>
+                <div className="dash-report-icon dash-report-icon--amber"><Clock size={18} strokeWidth={1.8} /></div>
                 <div className="dash-report-info">
                   <b>A vencer (30 dias)</b>
-                  <small>
-                    {contasAVencer.length > 0
-                      ? `${contasAVencer.length} conta${contasAVencer.length !== 1 ? 's' : ''}`
-                      : 'Nenhuma a vencer'}
-                  </small>
+                  <small>{contasAVencer.length > 0 ? `${contasAVencer.length} conta${contasAVencer.length !== 1 ? 's' : ''}` : 'Nenhuma a vencer'}</small>
                 </div>
                 <Download size={15} strokeWidth={2} className="dash-report-dl" />
               </button>

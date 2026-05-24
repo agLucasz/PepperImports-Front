@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { imageUrl, TAMANHOS, type ProdutoDTO } from '../../Services/produtoService';
 import { waLink } from './WhatsAppFloat';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import '../../Styles/Home/produto-modal.css';
 import '../../Styles/Admin/rich-text-editor.css';
 
@@ -32,9 +34,11 @@ const ProdutoModal: React.FC<Props> = ({ produto, onClose }) => {
   useEffect(() => {
     document.addEventListener('keydown', handleKey);
     document.body.style.overflow = 'hidden';
+    document.body.classList.add('pm-open');
     return () => {
       document.removeEventListener('keydown', handleKey);
       document.body.style.overflow = '';
+      document.body.classList.remove('pm-open');
     };
   }, [handleKey]);
 
@@ -232,10 +236,15 @@ const ProdutoModal: React.FC<Props> = ({ produto, onClose }) => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span className="pm-wa-icon" aria-hidden="true" />
+                <FontAwesomeIcon icon={faWhatsapp} />
                 Chamar no WhatsApp
               </a>
             )}
+
+            <button className="pm-btn-back" onClick={onClose}>
+              <span className="pm-back-arrow" aria-hidden="true" />
+              Voltar
+            </button>
           </div>
 
           {/* Garantias */}

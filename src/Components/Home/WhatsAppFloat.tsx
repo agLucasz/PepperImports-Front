@@ -1,4 +1,6 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import '../../Styles/Home/whatsapp-float.css';
 
 const WHATSAPP_NUMBER = '5514981635560';
@@ -20,7 +22,7 @@ const WhatsAppFloat: React.FC<Props> = ({
       className="wa-float"
       aria-label="Falar no WhatsApp"
     >
-      <span className="wa-float-icon" aria-hidden="true" />
+      <FontAwesomeIcon icon={faWhatsapp} className="wa-float-icon" />
       <span className="wa-float-tooltip">Fale conosco</span>
     </a>
   );

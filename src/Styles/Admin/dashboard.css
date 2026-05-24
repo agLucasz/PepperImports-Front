@@ -30,8 +30,8 @@
   text-align: center;
 }
 
-/* ══ LAYOUT ROWS ══════════════════════════════════════════════════════════ */
-.dash-row {
+/* ══ LAYOUT PRINCIPAL ═════════════════════════════════════════════════════ */
+.dash-main-grid {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 16px;
@@ -39,11 +39,13 @@
   align-items: start;
 }
 
-.dash-row-3 {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+/* Cada coluna é flex independente — sem sincronização de altura entre elas */
+.dash-left-col,
+.dash-right-col {
+  display: flex;
+  flex-direction: column;
   gap: 16px;
-  align-items: start;
+  min-width: 0;
 }
 
 /* ── Alerts column ────────────────────────────────────────────────────── */
@@ -249,11 +251,15 @@
   gap: 4px;
 }
 
-/* ══ RELATÓRIO CARDS ══════════════════════════════════════════════════════ */
-.dash-reports-col {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+/* ══ RELATÓRIO CARDS — faixa horizontal completa ═════════════════════════ */
+.dash-reports-row {
+  margin-bottom: 16px;
+}
+
+.dash-reports-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
 }
 
 .dash-reports-label {
@@ -359,21 +365,26 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .dash-row {
+  .dash-main-grid {
     grid-template-columns: 1fr;
   }
 
-  .dash-row-3 {
-    grid-template-columns: 1fr;
+  .dash-left-col,
+  .dash-right-col {
+    min-width: 0;
   }
 
-  .dash-row-3 .card[style*="span 2"] {
-    grid-column: span 1;
+  .dash-reports-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 640px) {
   .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dash-reports-grid {
     grid-template-columns: 1fr;
   }
 }

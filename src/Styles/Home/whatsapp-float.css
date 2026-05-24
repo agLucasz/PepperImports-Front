@@ -34,55 +34,11 @@
   transform: scale(.96);
 }
 
-/* ── Ícone WhatsApp — CSS puro ─────────────────────────────────────────── */
-/* Balloon principal */
+/* ── Ícone WhatsApp — FontAwesome ─────────────────────────────────────── */
 .wa-float-icon {
-  display: block;
-  width: 30px;
-  height: 30px;
-  position: relative;
-  border-radius: 50%;
-  border: 2.5px solid #fff;
-  background: transparent;
-}
-
-/* Corneta da bolha de fala */
-.wa-float-icon::before {
-  content: '';
-  position: absolute;
-  bottom: -6px;
-  left: 4px;
-  width: 10px;
-  height: 6px;
-  background: #25d366;
-  border-left: 2.5px solid #fff;
-  border-bottom: 2.5px solid #fff;
-  border-radius: 0 0 0 4px;
-  transform: rotate(8deg);
-}
-
-/* Símbolo do telefone / "W" representado como monofone estilizado */
-.wa-float-icon::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  border: 2.5px solid #fff;
-  /* recorte para simular o fone */
-  clip-path: polygon(
-    0% 55%,
-    35% 55%,
-    35% 100%,
-    65% 100%,
-    65% 55%,
-    100% 55%,
-    100% 0%,
-    0% 0%
-  );
+  font-size: 30px;
+  color: #fff;
+  line-height: 1;
 }
 
 /* ── Tooltip ───────────────────────────────────────────────────────────── */

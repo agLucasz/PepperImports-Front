@@ -24,11 +24,21 @@ const FG_LIGHT: [number, number, number]   = [245, 245, 245];
 const FG_MUTE: [number, number, number]    = [138, 138, 138];
 const GREEN: [number, number, number]      = [34, 197, 94];
 
+function fillPageBg(doc: jsPDF) {
+  const W = doc.internal.pageSize.getWidth();
+  const H = doc.internal.pageSize.getHeight();
+  doc.setFillColor(...BG_DARK);
+  doc.rect(0, 0, W, H, 'F');
+}
+
 function addHeader(doc: jsPDF, titulo: string, periodo: string) {
   const W = doc.internal.pageSize.getWidth();
 
-  // fundo escuro
-  doc.setFillColor(...BG_DARK);
+  // fundo escuro — página inteira primeiro
+  fillPageBg(doc);
+
+  // faixa de cabeçalho ligeiramente mais escura
+  doc.setFillColor(14, 14, 14);
   doc.rect(0, 0, W, 36, 'F');
 
   // faixa vermelha lateral
@@ -127,6 +137,7 @@ export function gerarPDFVendas(
 
   autoTable(doc, {
     startY: yAfterSummary,
+    didDrawPage: () => fillPageBg(doc),
     head: [['#', 'Produtos', 'Itens', 'Total', 'Data']],
     body: vendas.map(v => [
       `#${v.vendaId}`,
@@ -199,6 +210,7 @@ export function gerarPDFContas(
 
   autoTable(doc, {
     startY: yAfterSummary,
+    didDrawPage: () => fillPageBg(doc),
     head: [['Despesa', 'Parcela', 'Vencimento', 'Pagamento', 'Valor', 'Status']],
     body: contas.map(c => [
       c.nomeDespesa,

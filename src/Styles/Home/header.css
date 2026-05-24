@@ -264,7 +264,7 @@
     height: 38px;
   }
 
-  .site-header-admin-btn span:last-child {
+  .site-header-admin-btn {
     display: none;
   }
 }

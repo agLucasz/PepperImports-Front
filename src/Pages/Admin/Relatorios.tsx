@@ -151,6 +151,7 @@ const Relatorios: React.FC = () => {
                   type="date"
                   value={dataInicio}
                   onChange={e => setDataInicio(e.target.value)}
+                  onBlur={e => e.target.value && setDataInicio(e.target.value)}
                 />
               </div>
               <span className="rel-period-sep">—</span>
@@ -160,6 +161,7 @@ const Relatorios: React.FC = () => {
                   type="date"
                   value={dataFim}
                   onChange={e => setDataFim(e.target.value)}
+                  onBlur={e => e.target.value && setDataFim(e.target.value)}
                 />
               </div>
             </div>
